@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style>
+		.element {
+			margin: 10px;
+			font-size: 16px;
+			padding: 10px;
+			border-radius: 10px;
+			font: bold;
+		}
+		div  {
+			padding: 10px;
+			font-size: 26px;
+			font: bold;
+		}
+	</style>
+</head>
+<body>
+	<input id="input" type="text" class="element" size="20" placeholder="Введите сумму" >
+	<button id="calc" class="element">Calc</button>
+	<div type="text" id="result">0</div>
+	<select id="curency" class="element">
+		<option id="dollar">USD</option>
+		<option id="euro" >EUR</option>
+		<option id="krona">NOK</option>
+	</select>
+	<select id="buySell" class="element">
+		<option id="buy" value="buy">Купить</option>
+		<option id="sell" value="sell">Продать</option>
+	</select>
+	
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<script>
+
+		var $calc = $('#calc');
+		var url = "https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?date=20190604&json";
+		var dollar;
+		var eur;
+		var krona;
+		var req = fetch(url)
+			.then(promise => promise.json())
+			.then(promise => {
+				promise.forEach(item => {
+					if (item.cc === "USD") {
+						dollar = item.rate;
+					}
+					if (item.cc === "EUR") {
+						euro = item.rate;
+					}
+					if (item.cc === "NOK") {
+						krona = item.rate;
+					}
+				})
+			})
+			
+		$calc.on('click', function () {
+
+			var $input = $('#input').val();
+		
+			var curencyValue = $("#curency option:selected");
+	
+			var buySellValue = $("#buySell option:selected");
+		
+			var $result = $('#result');
+			var tempResult;
+	
+			if (curencyValue.attr("id") ==="dollar") {
+				tempResult = $input * dollar;
+			} 
+			if (curencyValue.attr("id") ==="euro") {
+				tempResult = $input * euro;	
+			}
+			if (curencyValue.attr("id") ==="krona") {
+				tempResult = $input * krona;
+			}
+			if (buySellValue.attr("id") ==="buy") {
+				tempResult *= 0.95;
+			} 
+			if (buySellValue.attr("id") ==="sell") {
+				tempResult *= 1.05;
+			}
+			
+			$result.text(tempResult);
+		});
+	</script>
+</body>
+</html>

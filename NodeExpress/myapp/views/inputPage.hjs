@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>inputPage</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  	<style>
+  		#num1, #num2, #add {
+  			margin: 10px;
+  			padding: 10px;
+  		}
+  		#sum {
+  			margin: 10px;
+  			padding: 10px;
+  			font-size: 20px; 
+  		}
+  	</style>
+  <body>
+  	
+    <input id="num1" type="text">
+    <input id="num2" type="text">
+    <button id="add">add</button>
+    <div id="sum"></div>
+
+    <script src="/javascripts/myApp.js">
+    	    
+    </script>
+
+  </body>
+</html>

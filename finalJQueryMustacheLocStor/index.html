@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Phonebook</title>
+</head>
+	<link href="dist\css\datepicker.min.css" rel="stylesheet" type="text/css">
+	<link href="dist\css\external.css" rel="stylesheet">
+	
+<body>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/3.0.1/mustache.js"></script>
+	<script src="https://momentjs.com/downloads/moment.js"></script>
+	
+    <script src="dist\js\datepicker.min.js"></script>
+    <script src="dist\js\i18n\datepicker.en.js"></script>
+    <script src="dist\js\setInfoDefault.js"></script>
+
+    <script id="template" type="text/template">
+		<input class="telNum{{num}}" type="tel" placeholder="phone number">
+	</script>
+
+	<script  id="template2" type="text/template">			
+		<div class="card">
+			<img id="avatar" src={{avatar}}>
+			<div class="perInf">
+				<div id="firstN">{{firstName}}</div>
+				<div id="secondN">{{secondName}}</div>
+				<div id="telNs">{{telNums}}</div>
+				<div class="birthD">{{birthDate}}</div>
+				<div id="comms">{{comments}}</div>
+			</div>
+			<div class="buts">
+				<button id="edit"><img class="icon" src="images/Write.ico"></button>
+				<button id="save"><img class="icon" src="images/Save.ico"></button>
+				<button id="del"><img class="icon" src="images/Delete.ico"></button>
+			</div>		
+		</div>
+	</script>
+
+	<div id="noteBook">
+		<ul id="formInput">
+			<li><input id="firstName" type="text" placeholder="name"></li>
+			<li><input id="secondName" type="text" placeholder="second name"></li>
+			<li><input class="telNum1" type="tel" placeholder="phone number"></li>
+			<li><input class="datepicker-here" type='text' placeholder="bithday date" data-position="right top"/></li>
+			<li><input id="comments" type="text" maxlength="120" placeholder="comments"></li>
+			<li><input id="avatar" type="file" accept="image/jpeg,image/png,image/gif"></li>
+			<li><button id="add">ADD</button></li>
+		</ul>
+				
+		<div id="peopleInfo">
+			<div id="bithPopup">
+				<span id="birthText">Не забыть про день рождения!</span>
+				<button id="birthOk"><img class="icon" src="images/Spell.ico"></button>
+			</div>
+		</div>
+		
+		<div class="searchDiv">
+			<input id="search" type="text" placeholder="search" >
+		</div>
+	</div>	
+
+	<script>
+
+		(function addPhoneField() {
+
+			$(".telNum1").one("click", createTel);
+			var num = 1;
+			
+			function createTel() {
+				var $li = $("<li></li>");
+				var template = $("#template").html();
+				num++;
+				var number = {
+					num
+				};
+				$li.html(Mustache.render(template, number));
+				$li.insertAfter($(".telNum" + (num - 1)).closest("li"));
+				$(".telNum" + num).one("click", createTel);
+			}
+		}());
+
+		(function renderInfo() {
+
+			if (localStorage.length > 1) {
+
+				for (var i = 0; i < localStorage.length; i++) {
+					var key = localStorage.key(i);
+
+					if (key !== "imgDefault") {
+
+						createDiv(JSON.parse(localStorage.getItem(key)));
+					}
+				}
+			}
+		
+			$("#add").click(function() {
+								 						
+				var info = {
+					avatar: "",
+					firstName: $("#firstName").val(), 
+					secondName: $("#secondName").val(),
+					birthDate: $(".datepicker-here").val(),
+					comments:  $("#comments").val(),
+					telNums: function() {
+						var nums = $(".telNum1").val();
+						var num = 2;
+
+						while ($(".telNum" + num).val()) {
+							nums += ", "  + $(".telNum" + num).val();
+							num++;
+						}
+						return nums;
+					}
+				}
+				
+				var fileImg = $("#avatar").prop("files")[0];  // get file from input
+									
+					if(fileImg) {
+						getBase64(fileImg);
+
+					} else {
+						info.avatar = localStorage.getItem("imgDefault");
+					}
+									
+					function getBase64(file) {
+						var reader = new FileReader();
+
+						reader.readAsDataURL(file);
+						reader.onload = function () {
+		 					info.avatar = reader.result;  // data in Base64 format
+		 				}
+		 			}
+				
+				if (fileImg && !info.avatar) {
+					setTimeout(function() {
+						helper();
+					}, 1000)
+
+				} else {
+					helper();
+				}
+
+				function helper() {
+					createDiv(info);
+					fillLocalStorage(info);
+					bithdayPopup();
+					cleanInputAfterAdd();
+				}
+			});	
+			
+			function createDiv(info) {
+
+				var $card = $("<div></div>");	
+				var template = $("#template2").html();
+				
+				$card.html(Mustache.render(template, info));
+				$("#peopleInfo").append($card);
+			}
+
+			function fillLocalStorage(info) {
+
+				var key = (info.firstName + info.secondName).toLowerCase();
+				
+				localStorage.setItem(key, JSON.stringify(info, function(key, value) {
+
+					if (typeof value === "function") {
+
+						return value();
+					}
+
+					return value;
+				}));
+			}	
+
+			function cleanInputAfterAdd() {
+					var $input = $("li input");
+
+					$input.each(function(ind, el) {
+						var $el = $(el);
+
+						$el.val("");
+
+						if ($el.attr("type") === "tel" && (!$el.hasClass("telNum1"))) {
+							$el.closest("li").remove();
+						}
+					});	
+				}		
+		}());
+
+		function bithdayPopup() {						
+
+			var currentDate = moment().format("DD.MM");
+			var birthTrue = false;	
+			
+			$(".birthD").each(function(ind, el) {
+				
+				if ($(el).text().trim().substring(0,5) === currentDate) {
+					
+					birthTrue = true;
+					$("#bithPopup").show();
+				} 
+			})	
+
+			$(".birthD").each(function(ind, el) {
+				if (birthTrue && $(el).text().trim().substring(0,5) !== currentDate) {
+
+						$(el).closest(".card").hide();
+				}			 
+			})
+
+			$("#birthOk").click(function() {
+				$("#bithPopup").hide();
+				$(".card").show();
+			})
+		};
+
+		bithdayPopup();
+
+		(function editSaveDel() {
+
+			var keyOld;
+			editCard();
+			saveCard();
+			deleteCard();
+
+			function editCard() {
+				$("#peopleInfo").on("click", "#edit", (function(e) {
+
+					var $el = $(e.target).closest(".card");
+					keyOld = ($el.find("#firstN").text() + $el.find("#secondN").text()).toLowerCase();
+													
+					$el.find(".perInf div").each(function(ind, el) {
+
+						if ($(el).attr("id")) {
+
+							$(el).replaceWith(function() {
+
+								return '<input type="text" id="' + $(el).attr("id") + '" value="' + $(this).text() + '">';
+							});
+						} else {
+
+							$(el).replaceWith(function() {
+
+								return '<input type="text" class="' + $(el).attr("class") + '" value="' + $(this).text() + '">';
+							});
+						}
+					});
+				}))
+			};
+
+			function saveCard() {										
+				$("#peopleInfo").on("click", "#save", (function(e) {
+
+					var $el = $(e.target).closest(".card");
+										
+					$el.find(".perInf input").each(function(ind, el) {
+						
+						if ($(el).attr("id")) {
+
+							$(el).replaceWith(function() {
+
+								return '<div id="' + $(el).attr("id") +'">' + $(this).val() + '</div>';
+							});
+						} else {	
+
+							$(el).replaceWith(function() {
+								
+								return '<div class="' + $(el).attr("class") +'">' + $(this).val() + '</div>';
+							});
+						}
+					});
+
+					var avatarLocStor = JSON.parse(localStorage.getItem(keyOld)).avatar;
+					var infoDiv = {
+						avatar: avatarLocStor,
+						firstName: $el.find(".perInf #firstN").text(), 
+						secondName: $el.find(".perInf #secondN").text(),
+						telNums: $el.find(".perInf #telNs").text(),
+						birthDate: $el.find(".perInf .birthD").text(),
+						comments: $el.find(".perInf #comms").text()
+					}
+					var keyNew = ($el.find("#firstN").text() + $el.find("#secondN").text()).toLowerCase();
+					
+					localStorage.removeItem(keyOld);
+					localStorage.setItem(keyNew, JSON.stringify(infoDiv));
+					bithdayPopup();
+				}))
+
+			};
+
+			function deleteCard() {
+				$("#peopleInfo").on("click", "#del", (function(e) {
+
+					var $el = $(e.target).closest(".card");
+
+					var key = ($el.find("#firstN").text() + $el.find("#secondN").text()).toLowerCase();
+					
+					localStorage.removeItem(key);
+
+					$el.remove();
+				}))
+			};
+		}());
+
+		(function searching() {
+			$("#search").keyup(function(e) {
+
+				var inputText = $(e.target).val().toLowerCase();
+				
+				var $card = $(".card");
+
+				$card.each(function(ind, elem) {
+					
+					if ($(elem).text().toLowerCase().includes(inputText)) {
+
+						$(elem).show();
+					} else {
+
+						$(elem).hide();
+					}
+				})
+			})
+		}());
+	</script>
+</body>
+</html>

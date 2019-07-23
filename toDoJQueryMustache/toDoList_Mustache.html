@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style>
+		li {
+			border-radius: 5px;
+			margin: 20px;
+			list-style: none;	
+		}
+		.task {
+			width: 300px;
+		    padding: 5px;
+		    border-radius: 5px;
+		    border: solid 1px gray;
+		    font-size: 16px;
+		    display: flex;
+		    justify-content: space-between;
+		    align-items: center;
+		}
+    	.buts {
+    		padding: 5px; 
+     	}
+    	.done {
+    		text-decoration: line-through;
+    		opacity: 0.5;
+    	}
+    	.done.hide {
+    		display: none;
+    	} 	
+	</style>
+</head>
+<body>
+		
+	<ul class="ul">	
+		<li>
+			<input class="text" type="text" size="28" placeholder="Впишите задачу">
+			<input class="submit" type="submit" value="Добавить">
+			<button class="eye"><img width=20px src="eye.jpg"></button>	
+		</li>
+	</ul>
+
+	<script id="template" type="text/template">
+		<div class='task{{done}}'>{{taskText}}
+			<div class='buts'>
+				<button class='ok'>v</button>
+				<button class='del'>x</button>
+			</div>
+		</div>
+	</script>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/3.0.1/mustache.js"></script>
+	<script>
+	
+		var $ul = $(".ul");
+		var $text = $(".text");
+		var butShowHide = false;
+
+		if (localStorage.length === 0) {
+			createEl("Хлеб");
+			createEl("Молоко");
+		} else {
+			for (var i = 0; i < localStorage.length; i++) {
+				var item = localStorage.key(i);
+								
+				if (localStorage.getItem(item) === "done") {
+					createEl(item, "done");	
+				} else {
+					createEl(item);
+				}
+			}
+		}
+
+		$ul.on("click", ".submit", function() {
+			createEl($text.val());
+			$text.val("");
+		})
+
+		$ul.on("click", ".ok", function(e) {
+			var $el = $(e.target.closest(".task"));
+			var valText	= $el.data("valText");
+			
+			$el.toggleClass("done");
+			
+			if ($el.hasClass('done')) {
+				localStorage.getItem(valText);	
+				localStorage.setItem(valText, "done");
+				if (butShowHide) {
+					$el.addClass("hide");
+				}
+			} else {
+				localStorage.getItem(valText);	
+				localStorage.setItem(valText, "");
+			}
+		})
+	
+		$ul.on("click", ".del", function (e) {
+			e.target.closest("li").remove();
+			localStorage.removeItem($(e.target.closest(".task")).data("valText"));
+		})
+	
+		function createEl(taskText, className) {
+			var $li = $("<li></li>");
+			
+			var task = {
+				taskText,
+				done: function() {
+					if (className) {
+						localStorage.setItem(taskText, "done");
+						return " " + className;
+					} else {
+						localStorage.setItem(taskText, "");
+						return "";
+					}
+				}
+			}
+			
+			var template = $("#template").html();
+
+			$li.html(Mustache.render(template, task));
+
+			$li.find(".task").data("valText", taskText);
+
+			$ul.append($li);
+		}
+
+		$(".eye").click(function() {
+
+			if (!butShowHide) {
+				butShowHide = true;
+				$(".task").addClass("hide");
+			} else {
+				butShowHide = false;
+				$(".task").removeClass("hide");
+			}
+		})
+	
+	</script>
+</body>
+</html>

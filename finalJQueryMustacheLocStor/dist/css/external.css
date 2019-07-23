@@ -1,0 +1,128 @@
+body {
+	background-image: linear-gradient(to left, #FFFFFF, #00ffff)
+}
+
+#noteBook {
+	display: flex;
+	justify-content: center;
+	}
+
+#peopleInfo  {
+	display: flex;
+	flex-wrap: wrap;
+	margin: 15px;
+	width: 704px;
+}
+
+.card {
+	background-color: #FFFFFF;
+	display: flex;
+	flex-direction: column;
+	margin: 10px;	
+	width: 320px;
+    padding: 5px;
+    border-radius: 5px;
+    border: solid 1px gray;
+    font-size: 18px;
+    height: 280px;
+    position: relative;
+}
+
+.card #avatar {
+	align-self: center;
+	width: 50px;
+	height: 50px;
+	border-radius: 50%;
+	border: solid 1px gray;
+}
+
+.perInf div {
+	 line-height: 24px;
+	 margin: 0 10px;
+}
+
+.perInf input {
+	padding: 4px;
+	width: 308px;
+    border-radius: 5px;
+    border: solid 1px gray;
+    font-size: 16px;
+}
+
+.buts {
+	align-self: center;
+	position: absolute;
+	bottom: 5px;
+}
+
+.icon {
+	width: 20px;
+	height: 20px;
+}
+
+li {
+	background-color: #FFFFFF; 
+	list-style: none;
+	margin: 10px 10px 10px 0;	
+	
+    padding: 5px;
+    border-radius: 5px;
+    border: solid 1px gray;
+   
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+}
+
+li input {
+	padding: 5px;
+	width: 290px;
+    border-radius: 5px;
+    border: solid 1px gray;
+    font-size: 18px;
+}
+.searchDiv {
+	background-color: #FFFFFF;
+	margin: 25px 10px 10px 10px;	
+	padding: 5px;
+    border-radius: 5px;
+    border: solid 1px gray;
+    height: 34px;
+}
+
+#search {
+	padding: 5px;
+	width: 300px;
+    border-radius: 5px;
+    border: solid 1px gray;
+    font-size: 18px; 
+}
+
+#comments {
+	height: 100px;
+}
+#editPerson {
+	height: 200px;
+}
+
+#bithPopup {
+	background-color: #FFFFFF;
+	margin: 10px;	
+	width: 100%;
+    padding: 5px;
+    border-radius: 5px;
+    border: solid 1px gray;
+    font-size: 26px;
+   	height: 30px;
+    display: none;
+}
+#birthText {
+	float: left;
+	padding-left: 25%;
+}
+#birthOk {
+	float: right;
+	padding-top: auto;
+	padding-bottom: auto  
+}
+

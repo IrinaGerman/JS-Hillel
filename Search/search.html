@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style>
+		.list {
+			font-size: 20px;
+			list-style: none;
+		}
+		.text {
+			margin: 25px;
+			padding: 10px;
+			border-radius: 15px;
+			font-size: 15px;
+			outline: none;
+			border: solid 1px gray;
+		}
+
+	</style>
+</head>
+<body>
+	<div >
+		<input type="text" class="text" placeholder="Введите поисковый запрос">
+		
+	<ul class="list">
+		<li class="li">Роберт Дауни</li>
+		<li class="li">Джорж Клуни</li>
+		<li class="li">Анна Кендрик</li>
+		<li class="li">Скарлетт Йоханссон</li>
+		<li class="li">Хью Джекман</li>
+		<li class="li">Роберт Де Ниро</li>
+		<li class="li">Джерард Батлер</li>
+		<li class="li">Шарлиз Терон</li>
+		<li class="li">Сандра Буллок</li>
+		<li class="li">Райан Рейнолдс</li>
+	</ul>
+	
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+	<script>
+
+		/*
+		Есть список с десятком элементов, над ним находится инпут, в него можно вписать текст, 
+		по мере ввода в списке должны оставаться только пункты которые содержат то что ввели, остальные скрываются
+		Большие/маленькие буквы игнорируются
+		*/
+		var $li = $(".li");
+
+		$(".text").keyup(function(e){
+  			var inputText = $(e.target).val().toLowerCase();
+  							
+			$li.each(function(ind, elem) {
+				if ($(elem).text().toLowerCase().includes(inputText)) {
+					$(elem).show();
+				} else {
+					$(elem).hide();
+				}
+			})
+		})
+
+	</script>
+	
+</body>
+</html>

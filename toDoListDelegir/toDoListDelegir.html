@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style>
+		li {
+			border-radius: 5px;
+			margin: 20px;
+			list-style: none;	
+		}
+		.task {
+			width: 300px;
+		    padding: 5px;
+		    border-radius: 5px;
+		    border: solid 1px gray;
+		    font-size: 16px;
+		    display: flex;
+		    justify-content: space-between;
+		    align-items: center;
+		}
+    	.buts {
+    		padding: 5px; 
+     	}
+    	.done {
+    		text-decoration: line-through;
+    		opacity: 0.5;
+    	}
+    	.done.hide {
+    		display: none;
+    	} 	
+	</style>
+</head>
+<body>
+		
+	<ul class="ul">	
+		<li>
+			<input class="text" type="text" size="28" placeholder="Впишите задачу">
+			<input class="submit" type="submit" value="Добавить">
+			<button class="eye"><img width=20px src="eye.jpg"></button>	
+		</li>
+		<li>
+			<div class="task">Хлеб
+				<div class="buts">
+					<button class="ok">v</button>
+					<button class="del">x</button>	
+				</div>
+			</div>
+		</li>
+		<li>
+			<div class="task">Молоко
+				<div class="buts">
+					<button class="ok">v</button>
+					<button class="del">x</button>	
+				</div>
+			</div>
+		</li>
+	</ul>
+
+	<script>
+		var $ul = document.querySelector(".ul");
+		var $text = document.querySelector(".text");
+		var butShowHide = "off";
+
+		$ul.addEventListener("click", function (e) {
+
+			if (e.target.classList.contains("submit")) {
+				createEl();
+
+			} else if (e.target.classList.contains("ok")){
+				e.target.closest(".task").classList.toggle("done");
+				if (butShowHide === "on") {
+					e.target.closest(".task").classList.add("hide");
+				}
+
+			} else if (e.target.classList.contains("del")){
+				$ul.removeChild(e.target.closest("li"));
+			}
+		})
+
+		function createEl() {
+			
+			var li = document.createElement("li");
+						
+			var div = document.createElement("div");
+			div.className = "task";
+			div.textContent = $text.value;
+			$text.value = "";
+			li.appendChild(div);
+
+			var buts = document.createElement("div");
+			buts.className = "buts";
+			div.appendChild(buts);
+
+			var button1 = document.createElement("button");
+			button1.className = "ok";
+			button1.textContent = "v";
+			buts.appendChild(button1);
+
+			var button2 = document.createElement("button");
+			button2.className = "del";
+			button2.textContent = "x";
+			buts.appendChild(button2);
+
+			$ul.appendChild(li);		//перенесла в конец функции
+		}
+
+		document.querySelector(".eye").addEventListener("click", function () {
+
+			if (butShowHide === "off") {
+				butShowHide = "on";
+			} else {
+				butShowHide = "off";
+			}
+
+			document.querySelectorAll(".task").forEach(function(task) {
+
+				if (butShowHide === "on") {
+					task.classList.add("hide");
+				} else {
+					task.classList.remove("hide");
+				}
+			})
+		})	
+
+	</script>
+</body>
+</html>

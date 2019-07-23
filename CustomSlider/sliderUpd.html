@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style>
+		img {
+			width: 500px;
+			height: 300px;
+		}
+		.hide {
+			display: none;
+		}
+
+	</style>
+</head>
+<body>
+
+	<div>
+		<button class="left"><<
+		</button>
+		<span>
+			<img class="picture1" src="images/1.jpg">
+			<img class="picture2 hide" src="images/2.jpg">
+			<img class="picture3 hide" src="images/3.jpg">
+			<img class="picture4 hide" src="images/4.jpg">
+			<img class="picture5 hide" src="images/5.jpg">
+		<span>
+		<button class="right">>>	
+		</button>
+	</div>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+	<script>
+		const LAST_NUMBER = 5;
+		var num = 1;
+				
+		function addClassHide(number){
+			$(".picture" + number).addClass("hide");
+		}
+
+		function removeClassHide(number){
+			$(".picture" + number).removeClass("hide");
+		}
+
+		$(".left").click(function() {
+
+			addClassHide(num);
+			
+			if (num !== 1) {
+				num = num - 1;
+			} else {
+				num = LAST_NUMBER;
+			}
+			
+			removeClassHide(num);
+		})
+
+		$(".right").click(function() {
+
+			addClassHide(num);
+
+			if (num !== LAST_NUMBER) {
+				num = num + 1;
+			} else {
+				num = 1;
+			}
+			
+			removeClassHide(num);
+		})
+	</script>
+</body>
+</html>

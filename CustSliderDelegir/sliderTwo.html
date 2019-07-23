@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style>
+		.wrap {
+			width: 10000px;
+			font-size: 0;
+		}
+		.active {
+			overflow: hidden;
+			margin: 30px;
+			width: 500px;
+			border: 3px solid blue;
+		}
+		.next {
+			float: right;
+		}
+		img {
+			width: 500px;
+			height: 300px;
+		}
+		#container {
+			margin-top: 20px; 
+		}
+		.hide {
+			display: none;
+		}
+		
+	</style>
+</head>
+<body>
+	<div class="active">
+		<div class="wrap">
+			<img class="picture1" src="images/1.jpg">
+			<img class="picture2" src="images/2.jpg">
+			<img class="picture3" src="images/3.jpg">
+			<img class="picture4" src="images/4.jpg">
+			<img class="picture5" src="images/5.jpg">
+		</div>		
+			<button class="prev"><<
+			</button>
+			<button class="next">>>	
+			</button>
+	</div>	
+
+
+	<div id="container">
+		<div class="wrapper">
+			<button class="left"><<
+			</button>
+			<span class=pictures>
+				<img class="picture1" src="images/1.jpg">
+				<img class="picture2 hide" src="images/2.jpg">
+				<img class="picture3 hide" src="images/3.jpg">
+				<img class="picture4 hide" src="images/4.jpg">
+				<img class="picture5 hide" src="images/5.jpg">
+			</span>
+			<button class="right">>>	
+			</button>
+		</div>
+		<div class="wrapper">
+			<button class="left"><<
+			</button>
+			<span class=pictures>
+				<img class="picture1"  src="images/6.jpg">
+				<img class="picture2 hide" src="images/7.jpg">
+				<img class="picture3 hide" src="images/8.jpg">
+				<img class="picture4 hide" src="images/9.jpg">
+			</span>
+			<button class="right">>>	
+			</button>
+		</div>
+	</div>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+	<script>
+
+		var $wrap = $(".wrap");
+		var DURATION = 1000;
+		var STEP = 500;
+		var images = $(".wrap img").length;
+		console.log(images);
+
+		$(".prev").click(function() {
+			var position = parseInt($wrap.css("marginLeft"));
+
+			if (position > STEP * (images)) {
+			
+				$wrap.animate({marginLeft: 0}, DURATION);
+
+			} else {
+				$wrap.animate({marginLeft: position + STEP}, DURATION);
+			}
+		})
+
+		$(".next").click(function() {
+
+			var position = parseInt($wrap.css("marginLeft"));
+				
+			if (position < (STEP * (images - 2) * -1)) {
+				
+				$wrap.animate({marginLeft: 0}, DURATION);
+			} else {
+				$wrap.animate({marginLeft: position - STEP}, DURATION);
+				
+			}
+		})
+				
+
+		// реализация через контейнер и делегирование
+
+		var $container = $("#container");
+		$(".wrapper").data("num", 1);
+			
+		$container.on("click", ".left" , function(e) {
+
+			var el = $(e.target.closest(".wrapper"));
+			var num = el.data("num");
+			var lastNumber = el.find("img").length;
+			
+			el.find(".picture" + num).addClass("hide");
+			
+			if (num !== 1) {
+				num = num - 1;
+			} else {
+				num = lastNumber;
+			}
+			
+			el.find(".picture" + num).removeClass("hide");
+			el.data("num", num);
+		});
+
+		$container.on("click", ".right", function(e) {
+
+			var el = $(e.target.closest(".wrapper"));
+			var num = el.data("num");
+			var lastNumber = el.find("img").length;
+
+			el.find(".picture" + num).addClass("hide");
+			
+			if (num !== lastNumber) {
+				num = num + 1;
+			} else {
+				num = 1;
+			}
+			
+			el.find(".picture" + num).removeClass("hide");
+			el.data("num", num);
+		});
+		
+	</script>
+</body>
+</html>

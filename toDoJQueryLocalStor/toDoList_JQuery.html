@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style>
+		li {
+			border-radius: 5px;
+			margin: 20px;
+			list-style: none;	
+		}
+		.task {
+			width: 300px;
+		    padding: 5px;
+		    border-radius: 5px;
+		    border: solid 1px gray;
+		    font-size: 16px;
+		    display: flex;
+		    justify-content: space-between;
+		    align-items: center;
+		}
+    	.buts {
+    		padding: 5px; 
+     	}
+    	.done {
+    		text-decoration: line-through;
+    		opacity: 0.5;
+    	}
+    	.done.hide {
+    		display: none;
+    	} 	
+	</style>
+</head>
+<body>
+		
+	<ul class="ul">	
+		<li>
+			<input class="text" type="text" size="28" placeholder="Впишите задачу">
+			<input class="submit" type="submit" value="Добавить">
+			<button class="eye"><img width=20px src="eye.jpg"></button>	
+		</li>
+	</ul>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+	<script>
+	
+		var $ul = $(".ul");
+		var $text = $(".text");
+		var butShowHide = false;
+
+		if (localStorage.length === 0) {
+			createEl("Хлеб");
+			createEl("Молоко");
+		} else {
+			for (var i = 0; i < localStorage.length; i++) {
+				var item = localStorage.key(i);
+								
+				if (localStorage.getItem(item) === "done") {
+					createEl(item, "done");	
+				} else {
+					createEl(item);
+				}
+			}
+		}
+
+		$ul.on("click", ".submit", function() {
+			createEl($text.val());
+			$text.val("");
+		})
+
+		$ul.on("click", ".ok", function(e) {
+			var $el = $(e.target.closest(".task"));
+			var valText	= $el.data("valText");
+			
+			$el.toggleClass("done");
+			
+			if ($el.hasClass('done')) {
+				localStorage.getItem(valText);	
+				localStorage.setItem(valText, "done");
+				if (butShowHide) {
+					$el.addClass("hide");
+				}
+			} else {
+				localStorage.getItem(valText);	
+				localStorage.setItem(valText, "");
+			}
+		})
+	
+		$ul.on("click", ".del", function (e) {
+			e.target.closest("li").remove();
+			localStorage.removeItem($(e.target.closest(".task")).data("valText"));
+		})
+
+		//переделала функцию, чтобы ul.append был в конце, после создания элемента
+		
+		function createEl(taskText, className) {
+		
+			var $li = $("<li></li>")
+				.append("<div class='task'>" + taskText + "</div>");
+			$li.find(".task").append("<div class='buts'></div>")
+				.data("valText", taskText);
+			$li.find(".buts")
+				.append("<button class='ok'>v</button>")
+				.append("<button class='del'>x</button>");
+			if (className) {
+				$li.find(".task").addClass(className);
+				localStorage.setItem(taskText, "done");
+			} else {
+				localStorage.setItem(taskText, "");
+			}
+
+			$ul.append($li);
+
+		}
+
+		$(".eye").click(function() {
+
+			if (!butShowHide) {
+				butShowHide = true;
+				$(".task").addClass("hide");
+			} else {
+				butShowHide = false;
+				$(".task").removeClass("hide");
+			}
+		})
+	
+	</script>
+</body>
+</html>

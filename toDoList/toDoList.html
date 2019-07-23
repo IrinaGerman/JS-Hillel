@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style>
+		li {
+			border-radius: 5px;
+			margin: 20px;
+			list-style: none;	
+		}
+		.task {
+			width: 300px;
+		    padding: 5px;
+		    border-radius: 5px;
+		    border: solid 1px gray;
+		    font-size: 16px;
+		    display: flex;
+		    justify-content: space-between;
+		    align-items: center;
+		}
+    	.buts {
+    		padding: 5px; 
+     	}
+    	.done {
+    		text-decoration: line-through;
+    		opacity: 0.5;
+    	}
+    	.done.hide {
+    		display: none;
+    	} 	
+	</style>
+</head>
+<body>
+		
+	<ul class="ul">	
+		<li>
+			<input class="text" type="text" size="28" placeholder="Впишите задачу">
+			<input class="submit" type="submit" value="Добавить">
+			<button class="eye"><img width=20px src="eye.jpg"></button>	
+		</li>
+		<li>
+			<div class="task">Хлеб
+				<div class="buts">
+					<button class="ok">v</button>
+					<button class="del">x</button>	
+				</div>
+			</div>
+		</li>
+		<li>
+			<div class="task">Молоко
+				<div class="buts">
+					<button class="ok">v</button>
+					<button class="del">x</button>	
+				</div>
+			</div>
+		</li>
+	</ul>
+
+	<script>
+		var $ul = document.querySelector(".ul");
+		var $text = document.querySelector(".text");
+		var butShowHide = "off";
+
+		document.querySelectorAll(".ok").forEach(function(ok) {
+			ok.addEventListener("click", handler);
+		});
+
+		document.querySelectorAll(".del").forEach(function(del) {
+			del.addEventListener("click", handlerDell);
+		});
+
+		document.querySelector(".submit").addEventListener("click", function () {
+			
+			var li = document.createElement("li");
+			$ul.appendChild(li);
+			
+			var div = document.createElement("div");
+			div.className = "task";
+			div.textContent = $text.value;
+			$text.value = "";
+			li.appendChild(div);
+
+			var buts = document.createElement("div");
+			buts.className = "buts";
+			div.appendChild(buts);
+
+			var button1 = document.createElement("button");
+			button1.className = "ok";
+			button1.textContent = "v";
+			button1.addEventListener("click", handler);
+			buts.appendChild(button1);
+
+			var button2 = document.createElement("button");
+			button2.className = "del";
+			button2.textContent = "x";
+			button2.addEventListener("click", handlerDell);
+			buts.appendChild(button2);
+		})
+
+		function handler() {
+			this.closest(".task").classList.toggle("done");
+			if (butShowHide === "on") {
+				this.closest(".task").classList.add("hide");
+			}
+		}
+
+		function handlerDell() {
+			$ul.removeChild(this.closest("li"));
+		}
+
+		document.querySelector(".eye").addEventListener("click", function() {
+			if (butShowHide === "off") {
+				butShowHide = "on";
+			} else {
+				butShowHide = "off";
+			}
+			document.querySelectorAll(".task").forEach(function(task) {
+				if (butShowHide === "on") {
+					task.classList.add("hide");
+				} else {
+					task.classList.remove("hide");
+				}
+			})
+		})	
+	</script>
+</body>
+</html>

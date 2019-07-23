@@ -1,0 +1,15 @@
+{
+  "name": "homework39",
+  "version": "1.0.0",
+  "description": "my modest app",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "irinaGerman",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.1",
+    "jquery": "^3.4.1"
+  }
+}

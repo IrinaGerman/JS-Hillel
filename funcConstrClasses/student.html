@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	<script>
+		/*
+		Функция конструктор
+		Вам нужно сделать конструктор сущности Студент.
+
+		У Студента есть имя, фамилия, год рождения — это свойства. Есть массив с оценками, это тоже свойство. И есть возможность получить возраст студента и его средний бал — это методы.
+
+		Еще у всех Студентов есть по массиву одинаковой длины, в нем 25 элементов, изначально он не заполнен, но на 25 элементов. Это массив в котором отмечается посещаемость, каждый раз когда мы вызываем метод .present() на очередное пустое место в массив записывается true, когда вызываем .absent() — записывается false. Предусмотрите какую нибудь защиту от того чтоб в массиве посещаемости не могло быть более 25 записей. Массив это свойство, present и absent — методы.
+
+		Ну и последний метод: .summary(), он проверяет среднюю оценку, и среднее посещение(количество Посещений/количество Занятий), и если средняя оценка больше 90 а среднее посещение больше 0.9, то метод summary, возвращает строку "Ути какой молодчинка!", если одно из этих значений меньше, то — "Норм, но можно лучше", если оба ниже — "Редиска!".
+
+		Ну и не забудьте после того как напишите замечательный конструктор, создать пару экземпляров(конкретных студентов) и подергать методы.
+		*/
+
+		function Student(firstName, secondName, born) {
+			this.firstName = firstName;
+			this.secondName = secondName;
+			this.born = born;
+			this.gradeArr = [];
+			this.presentArr = new Array(25);
+			this.realLength = 0;
+		}
+
+		Student.prototype.age = function() {
+
+			return new Date().getFullYear() - this.born;
+		};
+
+		Student.prototype.present = function() {
+			if (this.realLength < this.presentArr.length ) {
+			 	this.presentArr[this.realLength] = true;
+			 	this.realLength++;
+			 } else {
+				console.log("Массив посещаемости заполнен у студента " + this.secondName);
+			}
+		};
+
+		Student.prototype.absent = function() {
+			if (this.realLength < this.presentArr.length ) {
+			 	this.presentArr[this.realLength] = false;
+			 	this.realLength++;
+			 } else {
+				console.log("Массив посещаемости заполнен у студента " + this.secondName);
+			}
+		};
+
+		Student.prototype.summary = function() {
+						
+			var gradeAverage = this.gradeArr.reduce(function(sum, item) {
+				return sum + item;
+			}) / this.gradeArr.length;      //исправила this.length на this.gradeArr.length
+			
+			var presentAverage = (this.presentArr.filter(function(item) {
+				return item === true;
+			}).length)
+			/ (this.presentArr.filter(function(item) {
+				return item !== undefined;
+			}).length);
+
+				
+			if (gradeAverage >= 90 && presentAverage >= 0.9) {
+				
+				return "Ути какой молодчинка!";
+
+			} else if (gradeAverage >= 90 || presentAverage >= 0.9) {
+				
+				return "Норм, но можно лучше";
+
+			} else {
+
+				return "Редиска!";
+			}
+		
+		};
+
+		// создаю пару экземпляров(конкретных студентов) и дергаю методы :)
+
+		var student1 = new Student("Dmitriy", "Popov", 1984);
+		var student2 = new Student("Andrey", "Cherniy", 1980);
+		var student3 = new Student("Liliya", "Ivanyuk", 1990);
+		
+		function fillArrs(person) {
+		
+			for (var i = 0; i < 27; i++) {
+				person.gradeArr.push(Math.round(Math.random() * 100));
+
+				if (Math.random() < 0.1) {
+					person.absent();
+				} else {
+					person.present();
+				}
+			}
+	 	}
+
+	 	function fillAndConsoleLog(person) {
+	 		fillArrs(person);
+	 		console.log(person);
+	 		console.log(person.age());
+	 		console.log(person.summary());
+	 	}
+
+	 	fillAndConsoleLog(student1);
+	 	fillAndConsoleLog(student2);
+	 	fillAndConsoleLog(student3);
+
+	</script>
+	
+</body>
+</html>
