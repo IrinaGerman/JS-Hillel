@@ -73,8 +73,7 @@
 		document.querySelector(".submit").addEventListener("click", function () {
 			
 			var li = document.createElement("li");
-			$ul.appendChild(li);
-			
+						
 			var div = document.createElement("div");
 			div.className = "task";
 			div.textContent = $text.value;
@@ -96,6 +95,8 @@
 			button2.textContent = "x";
 			button2.addEventListener("click", handlerDell);
 			buts.appendChild(button2);
+
+			$ul.appendChild(li);
 		})
 
 		function handler() {
